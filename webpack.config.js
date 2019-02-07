@@ -16,7 +16,8 @@ const styleLoader = isDevelopment
 module.exports = {
   mode: NODE_ENV,
   entry: {
-    app: ['./src/index.js']
+    vendor: './src/vendor.js',
+    app: './src/index.js'
   },
   devtool: false,
   devServer: {
@@ -26,7 +27,13 @@ module.exports = {
     port: 9000,
     open: true
   },
+  performance: {
+    maxEntrypointSize: 400000
+  },
   optimization: {
+    splitChunks: {
+      chunks: 'all'
+    },
     minimizer: [
       new UglifyJsPlugin({
         cache: false,
@@ -48,7 +55,7 @@ module.exports = {
     new CleanWebpackPlugin(['dist']),
     new webpack.SourceMapDevToolPlugin({
       filename: '[name].js.map',
-      exclude: ['vendor.js']
+      exclude: ['./src/vendor.js']
     }),
     new HtmlWebpackPlugin({
       title: 'TEst',
@@ -69,8 +76,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-transform-runtime']
+            presets: ['@babel/preset-env']
           }
         }
       },
